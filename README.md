@@ -1,1 +1,1 @@
-josephus-problem
+josephus-problem in c language
