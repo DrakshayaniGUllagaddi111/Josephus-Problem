@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gemini Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        .chat-container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+        .user-message, .ai-message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user-message {
+            background-color: #e1f7d5;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #f0f0f0;
+            text-align: left;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <h2>AI Gemini Chat</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById('user-input').value;
+            if (userInput.trim() === "") return;
+
+            // Display user message
+            var chatBox = document.getElementById('chat-box');
+            var userMessage = document.createElement('div');
+            userMessage.classList.add('user-message');
+            userMessage.innerText = userInput;
+            chatBox.appendChild(userMessage);
+
+            // Clear the input field
+            document.getElementById('user-input').value = '';
+
+            // Scroll to the bottom of the chat box
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Send the user message to the backend API
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: userInput })
+            })
+            .then(response => response.json())
+            .then(data => {
+                var aiMessage = document.createElement('div');
+                aiMessage.classList.add('ai-message');
+                aiMessage.innerText = data.response;
+                chatBox.appendChild(aiMessage);
+                chatBox.scrollTop = chatBox.scrollHeight;
+            });
+        }
+    </script>
+
+</body>
+</html>
+
+
+
